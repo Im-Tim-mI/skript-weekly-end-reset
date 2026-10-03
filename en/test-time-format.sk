@@ -1,0 +1,19 @@
+# ------------------------------------------------------------
+#  skript-weekly-end-reset (English edition) - diagnostic helper
+#  https://github.com/Im-Tim-mI/skript-weekly-end-reset
+#  Copyright (c) 2026 廷廷小教室、廷廷的家（Tim945）
+#  License: MIT + Commons Clause (see LICENSE)
+# ------------------------------------------------------------
+
+# Time format test script
+# Safe to delete after use.
+# weekly-end-reset.sk only fires when the time prints like "12:00"
+# and the weekday prints as "Sunday" (English) - use /testtime to check.
+
+command /testtime:
+    permission: op
+    trigger:
+        set {_time} to now formatted as "HH:mm"
+        set {_day} to now formatted as "EEEE"
+        send "&eTime format: &f%{_time}%"
+        send "&eWeekday format: &f%{_day}%"

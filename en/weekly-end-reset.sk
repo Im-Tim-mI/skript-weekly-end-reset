@@ -1,0 +1,83 @@
+# ------------------------------------------------------------
+#  skript-weekly-end-reset (English edition)
+#  https://github.com/Im-Tim-mI/skript-weekly-end-reset
+#  Copyright (c) 2026 廷廷小教室、廷廷的家（Tim945）
+#  License: MIT + Commons Clause (see LICENSE)
+# ------------------------------------------------------------
+
+# ============================================
+# Weekly End Reset
+# Automatically resets The End every Sunday at 12:00 (noon)
+# ============================================
+# File name: weekly-end-reset.sk
+# Location : plugins/Skript/scripts/
+# ============================================
+#
+# ⚠️ Important:
+# Make sure your Multiverse config.yml contains:
+# confirm-mode: disable_console
+#
+# ============================================
+
+options:
+    prefix: &6&l[End Reset] &r
+
+# ============================================
+# Check the time every minute
+# ============================================
+every minute:
+    set {_time} to now formatted as "HH:mm"
+    set {_day} to now formatted as "EEEE"
+
+    # Only on Sundays
+    if {_day} is "Sunday":
+
+        # 11:30 - advance notice
+        if {_time} is "11:30":
+            broadcast "{@prefix}&eThe End will be reset at 12:00!"
+            broadcast "{@prefix}&ePlayers in The End: please leave early and keep your items safe!"
+
+        # 11:50 - 10 minutes left
+        if {_time} is "11:50":
+            broadcast "{@prefix}&cEnd reset in 10 minutes!"
+            broadcast "{@prefix}&cPlease leave The End now!"
+
+        # 11:55 - 5 minutes left
+        if {_time} is "11:55":
+            broadcast "{@prefix}&c&lEnd reset in 5 minutes!"
+
+        # 11:59 - 1 minute left
+        if {_time} is "11:59":
+            broadcast "{@prefix}&4&lEnd reset in 1 minute!"
+            broadcast "{@prefix}&4&lEveryone still in The End will be teleported out!"
+
+        # 12:00 - run the reset
+        if {_time} is "12:00":
+            execute console command "resetend"
+
+# ============================================
+# Manual reset command (admins)
+# ============================================
+command /resetend:
+    permission: op
+    trigger:
+        broadcast "{@prefix}&bResetting The End..."
+        loop all players in world "world_the_end":
+            teleport loop-player to spawn of world "world"
+            send "{@prefix}&eYou have been teleported to the Overworld!" to loop-player
+        wait 2 seconds
+        execute console command "mv regen world_the_end --seed"
+        wait 3 seconds
+        broadcast "{@prefix}&a&lThe End has been reset!"
+        broadcast "{@prefix}&d&l✦ The dragon hunt begins! ✦"
+
+# ============================================
+# Show the next reset time
+# ============================================
+command /endresetinfo:
+    description: Show information about the End reset
+    trigger:
+        send "&6&l========== End Reset Info =========="
+        send "&eNext reset: &bEvery Sunday at 12:00"
+        send "&eWhat is reset: &fThe whole End world is regenerated and the Ender Dragon respawns"
+        send "&6&l===================================="
